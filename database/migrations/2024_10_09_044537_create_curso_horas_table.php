@@ -9,12 +9,10 @@ return new class extends Migration {
     {
         Schema::create('curso_horas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('curso_id'); // Relación con la tabla 'cursos'
-            $table->integer('horas')->unsigned();
-            $table->year('año'); // Campo para el año
+            $table->enum('categoria', ['curso_seminarios', 'curso_extension']); // Almacena la categoría directamente
+            $table->integer('horas_minimas')->unsigned(); // Número de horas
+            $table->year('año'); // Año del curso
             $table->timestamps();
-
-            $table->foreign('curso_id')->references('id')->on('cursos')->onDelete('cascade');
         });
     }
 

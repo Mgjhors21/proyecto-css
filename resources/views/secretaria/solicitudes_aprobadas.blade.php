@@ -3,7 +3,6 @@
 @section('titulo', 'Solicitudes Aprobadas')
 
 @section('contenido')
-
     <link rel="stylesheet" href="{{ asset('css/solicitud.css') }}">
     <div class="card">
         <div class="card-header">
@@ -41,7 +40,7 @@
                                     <th>Correo</th>
                                     <th>Teléfono</th>
                                     <th>Programa Académico</th>
-                                    <th>Radicado</th>
+                                    <th>Radicado de Salida</th>
                                     <th>Estado</th>
                                     <th>Fecha de Aprobación</th>
                                 </tr>
@@ -49,29 +48,15 @@
                             <tbody>
                                 @foreach ($solicitudesAprobadas as $solicitud)
                                     <tr>
-
-
-                                        <td>{{ optional($solicitud->estudiante)->name }}
-                                        <td>{{ optional($solicitud->estudiante)->cod_alumno }}
+                                        <td>{{ optional($solicitud->estudiante)->name }}</td>
+                                        <td>{{ optional($solicitud->estudiante)->cod_alumno }}</td>
                                         <td>{{ optional($solicitud->estudiante)->documento ?? 'N/A' }}</td>
                                         <td>{{ optional($solicitud->estudiante)->email ?? 'N/A' }}</td>
                                         <td>{{ optional($solicitud->estudiante)->telefonos ?? 'N/A' }}</td>
                                         <td>{{ optional($solicitud->estudiante)->programa_academico ?? 'N/A' }}</td>
+                                        <td>{{ $solicitud->numero_radicado_salida ?? 'N/A' }}</td>
                                         <td>
-                                            <form action="{{ route('updateRadicadoSalida', $solicitud->ticket->id ?? $solicitud->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('PUT')
-                                                <div>
-
-                                                    <!-- Mostrar el valor del radicado de salida actualizado -->
-                                                    <input type="text" name="numero_radicado_salida"
-                                                           value="{{ old('numero_radicado_salida', $solicitud->ticket->numero_radicado_salida ?? '') }}"
-                                                           class="form-control" placeholder="Ingresar Radicado de Salida" />
-                                                </div>
-                                                <button type="submit" class="btn btn-primary btn-sm mt-2">Guardar</button>
-                                            </form>
-                                        </td>
-                                        <td>{{ ucfirst($solicitud->estado) }}
+                                            {{ ucfirst($solicitud->estado) }}
                                             <!-- Botón Ver Carta -->
                                             <form action="{{ route('viewCarta') }}" method="GET" style="display:inline;">
                                                 <input type="hidden" name="ticket_id" value="{{ $solicitud->id }}">
@@ -107,7 +92,7 @@
                                     <th>Correo</th>
                                     <th>Teléfono</th>
                                     <th>Programa Académico</th>
-                                    <th>Radicado</th>
+                                    <th>Radicado de Salida</th>
                                     <th>Estado</th>
                                     <th>Fecha de Rechazo</th>
                                 </tr>
@@ -115,27 +100,15 @@
                             <tbody>
                                 @foreach ($solicitudesRechazadas as $solicitud)
                                     <tr>
-                                        <td>{{ optional($solicitud->estudiante)->name }}
-                                        <td>{{ optional($solicitud->estudiante)->cod_alumno }}
+                                        <td>{{ optional($solicitud->estudiante)->name }}</td>
+                                        <td>{{ optional($solicitud->estudiante)->cod_alumno }}</td>
                                         <td>{{ optional($solicitud->estudiante)->documento ?? 'N/A' }}</td>
                                         <td>{{ optional($solicitud->estudiante)->email ?? 'N/A' }}</td>
                                         <td>{{ optional($solicitud->estudiante)->telefonos ?? 'N/A' }}</td>
                                         <td>{{ optional($solicitud->estudiante)->programa_academico ?? 'N/A' }}</td>
+                                        <td>{{ $solicitud->ticket->numero_radicado_salida ?? 'N/A' }}</td>
                                         <td>
-                                            <form action="{{ route('updateRadicadoSalida', $solicitud->ticket->id ?? $solicitud->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('PUT')
-                                                <div>
-
-                                                    <!-- Mostrar el valor del radicado de salida actualizado -->
-                                                    <input type="text" name="numero_radicado_salida"
-                                                           value="{{ old('numero_radicado_salida', $solicitud->ticket->numero_radicado_salida ?? '') }}"
-                                                           class="form-control" placeholder="Ingresar Radicado de Salida" />
-                                                </div>
-                                                <button type="submit" class="btn btn-primary btn-sm mt-2">Guardar</button>
-                                            </form>
-                                        </td>
-                                        <td>{{ ucfirst($solicitud->estado) }}
+                                            {{ ucfirst($solicitud->estado) }}
                                             <!-- Botón Ver Carta -->
                                             <form action="{{ route('viewCarta') }}" method="GET" style="display:inline;">
                                                 <input type="hidden" name="ticket_id" value="{{ $solicitud->id }}">

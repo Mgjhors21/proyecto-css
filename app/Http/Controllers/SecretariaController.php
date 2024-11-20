@@ -5,39 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\Estudiante;
-use App\Models\Solicitud;
-use App\Models\CursoExtension;
 use App\Models\TicketCurso;
-use App\Models\CursoSeminario;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Models\Historial;
 
 class SecretariaController extends Controller
 {
-    public function listarTickets()
-    {
-        $solicitudesPorEstudiante = Ticket::whereNotNull('numero_radicado')
-            ->with('estudiante')
-            ->get()
-            ->groupBy('user_id');
 
-        $primerEstudiante = null;
-        if ($solicitudesPorEstudiante->isNotEmpty()) {
-            $primerEstudiante = $solicitudesPorEstudiante->first()->first()->estudiante;
-        }
-
-        return view('secretaria.solicitudes_lista', compact('solicitudesPorEstudiante', 'primerEstudiante'));
-    }
-
-
-    // Controlador
     public function actualizarEstado(Request $request, $ticketId, $estado)
     {
         DB::beginTransaction();
         try {
             $ticket = Ticket::findOrFail($ticketId);
             $ticket->estado_ticket = $estado;
+
+            // Si el estado es 'aprobado' o 'rechazado', generar número de radicado de salida
+            if (in_array($estado, ['aprobado', 'rechazado'])) {
+                $numeroRadicadoSalida = $this->generarNumeroRadicadoUnicoSalida();
+
+                // Asignar el número de radicado de salida al ticket
+                $ticket->numero_radicado_salida = $numeroRadicadoSalida;
+            }
+
             $ticket->save();
 
             DB::commit();
@@ -45,16 +34,37 @@ class SecretariaController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => "La solicitud ha sido {$estado}a exitosamente",
-                'newStatus' => $estado
+                'newStatus' => $estado,
+                'numero_radicado_salida' => $ticket->numero_radicado_salida ?? null
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'success' => false,
                 'message' => "Error al actualizar el estado: " . $e->getMessage()
             ], 500);
         }
     }
+
+    /**
+     * Genera un número de radicado único para la salida.
+     *
+     * @return int
+     */
+    private function generarNumeroRadicadoUnicoSalida()
+    {
+        do {
+            // Generar un número aleatorio de 6 dígitos
+            $numeroRadicadoSalida = random_int(100000, 999999);
+
+            // Verificar que no exista en la tabla `historial`
+            $existeEnHistorial = Historial::where('numero_radicado_salida', $numeroRadicadoSalida)->exists();
+        } while ($existeEnHistorial);
+
+        return $numeroRadicadoSalida;
+    }
+
 
     public function aprobarSolicitud($ticketId)
     {
@@ -68,7 +78,7 @@ class SecretariaController extends Controller
 
         $this->actualizarEstado(request(), $ticketId, 'rechazado');
         return redirect()->back()
-        ->with('error', "La solicitud ha sido rechazada.");
+            ->with('error', "La solicitud ha sido rechazada.");
     }
 
     public function rechazarCurso(Request $request, $id, $tipoCurso)
@@ -132,6 +142,24 @@ class SecretariaController extends Controller
             return redirect()->back()->with('error', 'Error al aprobar el curso: ' . $e->getMessage());
         }
     }
+    public function listarTickets()
+    {
+        $solicitudesPorEstudiante = Ticket::whereNotNull('numero_radicado')
+            ->with('estudiante')
+            ->get()
+            ->groupBy('user_id');
+
+        $primerEstudiante = null;
+        if ($solicitudesPorEstudiante->isNotEmpty()) {
+            $primerEstudiante = $solicitudesPorEstudiante->first()->first()->estudiante;
+        }
+
+        return view('secretaria.solicitudes_lista', compact('solicitudesPorEstudiante', 'primerEstudiante'));
+    }
+
+
+    // Controlador
+
 
     public function verDetalles($id)
     {

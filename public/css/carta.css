@@ -84,35 +84,3 @@ h4 {
     color: black;
     text-align: center;
 }
-
-
-/* Estilo para alinear la firma y texto hacia la izquierda */
-.firma-container {
-    width: 308px;
-    display: flex;
-    flex-direction: column; /* Cambia a disposición vertical (columna) */
-    align-items: center; /* Alinea los elementos a la izquierda */
-    margin: 20px 0; /* Espaciado superior e inferior */
-}
-
-.firma {
-    width: 100px; /* Ajusta el ancho de la firma */
-    height: 230px; /* Mantén la proporción */
-    display: inline-block; /* Asegura que no rompa el flujo de elementos */
-    vertical-align: initial; /* Alinea con texto u otros elementos */
-    transform: rotate(90deg); /* Rotación de 90 grados */
-    transform-origin: center; /* Define el punto de rotación (centro) */
-}
-
-.decano-text {
-    font-size: 12px; /* Tamaño del texto */
-    color: black; /* Color del texto */
-    text-align: left; /* Asegura alineación a la izquierda */
-    max-width: 200px; /* Opcional: limita el ancho del texto */
-    margin: 0; /* Elimina márgenes adicionales */
-}
-
-
-.subir-container{
-    align-items: center;
-}

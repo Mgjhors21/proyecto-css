@@ -23,13 +23,13 @@
                                 <li><a href="{{ route('welcome') }}">Panel Administrador</a></li>
                                 <li><a href="{{ route('gestion.user') }}">Gestión de usuarios</a></li>
                                 <li><a href="{{ route('principal.form') }}">Formulario de Solicitud</a></li>
-                                <li><a href="{{ route('vicerrectora.listaRadicado') }}">Lista de Radicados</a></li>
                                 <li><a href="{{ route('solicitudes_lista') }}">Solicitudes</a></li>
                                 <li><a href="{{ route('tickets.index') }}">Visualizar Tickets</a></li>
                                 <li><a href="{{ route('solicitudes.carta') }}">Respuesta Solicitud</a></li>
                                 <li><a href="{{ route('historial') }}">Historial</a></li>
                                 <li><a href="{{ route('facultades.index') }}">Añadir Facultad</a></li>
                                 <li><a href="{{ route('institucion.create') }}">Añadir Institucion</a></li>
+                                <li><a href="{{ route('horas.cursos') }}">Añadir Horas</a></li>
                             @elseif(Auth::user()->hasRole('coordinador'))
                                 <li><a href="{{ route('welcome') }}">Panel Administrador</a></li>
                                 <li><a href="{{ route('solicitudes_lista') }}">Solicitudes</a></li>

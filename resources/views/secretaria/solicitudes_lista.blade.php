@@ -4,37 +4,23 @@
 
 @section('contenido')
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ asset('js/solicitudes.js') }}"></script>
-
     <link rel="stylesheet" href="{{ asset('css/solicitud.css') }}">
 
     <div class="card">
         <div class="card-header">
-            <h1 class="text-center mb-4">Lista de Solicitudes</h1>
+            <h1 class="text-center mb-4">Lista de Solicitudes de Tickets</h1>
         </div>
-
-        <!-- Mostrar el mensaje de SweetAlert directamente -->
+        <!-- Mensajes de éxito y error -->
         @if (session('success'))
-            <script>
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: '{{ session('success') }}',
-                    icon: 'success',
-                    confirmButtonText: 'Aceptar'
-                });
-            </script>
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
         @endif
 
         @if (session('error'))
-            <script>
-                Swal.fire({
-                    title: '¡Error!',
-                    text: '{{ session('error') }}',
-                    icon: 'error',
-                    confirmButtonText: 'Aceptar'
-                });
-            </script>
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
         @endif
 
         <div class="row justify-content-center mb-4">
@@ -56,7 +42,7 @@
         @else
             <div class="card shadow">
                 <div class="card-header">
-                    <h2 class="mb-0 text-center">Tickets Registrados</h2>
+                    <h2 class="mb-0 text-center">Solicitudes de Tickets Registradas</h2>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -75,73 +61,24 @@
                             <tbody>
                                 @foreach ($solicitudesPorEstudiante as $estudianteId => $solicitudes)
                                     @php
+                                        // Obtener la información del estudiante
                                         $estudiante = $solicitudes->first()->estudiante;
                                     @endphp
                                     <tr>
-                                        <form action="{{ route('estudiante.actualizar', ['id' => $estudiante->id]) }}"
-                                            method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <td>
-                                                <input type="text" name="cod_alumno"
-                                                    value="{{ old('cod_alumno', $estudiante->cod_alumno) }}"
-                                                    class="form-control @error('cod_alumno') is-invalid @enderror" required>
-                                                @error('cod_alumno')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <input type="text" name="name"
-                                                    value="{{ old('name', $estudiante->name) }}"
-                                                    class="form-control @error('name') is-invalid @enderror" required>
-                                                @error('name')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <input type="text" name="documento"
-                                                    value="{{ old('documento', $estudiante->documento) }}"
-                                                    class="form-control @error('documento') is-invalid @enderror" required>
-                                                @error('documento')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <input type="email" name="email"
-                                                    value="{{ old('email', $estudiante->email) }}"
-                                                    class="form-control @error('email') is-invalid @enderror" required>
-                                                @error('email')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <input type="text" name="telefonos"
-                                                    value="{{ old('telefonos', $estudiante->telefonos) }}"
-                                                    class="form-control @error('telefonos') is-invalid @enderror">
-                                                @error('telefonos')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <input type="text" name="programa_academico"
-                                                    value="{{ old('programa_academico', $estudiante->programa_academico) }}"
-                                                    class="form-control @error('programa_academico') is-invalid @enderror">
-                                                @error('programa_academico')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('solicitud.detalles', ['id' => $estudiante->id]) }}"
-                                                    class="btn btn-sm btn-primary">
-                                                    <i class="fas fa-eye"></i> Ver Detalles
-                                                </a>
-                                                <button type="submit" class="btn btn-success btn-sm guardar-btn">
-                                                    <i class="fas fa-save"></i> Guardar
-                                                </button>
-                                            </td>
-                                        </form>
+                                        <td>{{ $estudiante->cod_alumno }}</td>
+                                        <td>{{ $estudiante->name }} {{ $estudiante->apellido }}</td>
+                                        <td>{{ $estudiante->documento }}</td>
+                                        <td>{{ $estudiante->email }}</td>
+                                        <td>{{ $estudiante->telefonos }}</td>
+                                        <td>{{ $estudiante->programa_academico }}</td>
+                                        <td>
+                                            <a href="{{ route('solicitud.detalles', ['id' => $estudiante->id]) }}"
+                                                class="btn btn-sm btn-primary">
+                                                <i class="fas fa-eye"></i> Ver Detalles
+                                            </a>
+                                        </td>
                                     </tr>
-                                    <!-- Solicitudes de tickets -->
+                                    <!-- Aquí añadimos las solicitudes de tickets de cada estudiante -->
                                     <tr class="detalles-{{ $estudianteId }} d-none">
                                         <td colspan="7">
                                             <ul>
@@ -169,5 +106,9 @@
             </a>
         </div>
     </div>
+@endsection
 
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/solicitudes.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 @endsection

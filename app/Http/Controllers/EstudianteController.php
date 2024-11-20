@@ -12,8 +12,6 @@ use Maatwebsite\Excel\Validators\ValidationException;
 use App\Models\Programa;
 use App\Models\Institucion;
 use App\Models\Facultad;
-use Illuminate\Support\Facades\Validator;
-
 
 
 class EstudianteController extends Controller
@@ -190,23 +188,5 @@ class EstudianteController extends Controller
 
         // Redirigir con un mensaje de éxito
         return redirect()->route('institucion.create')->with('success', 'Institución eliminada con éxito.');
-    }
-
-    public function actualizar(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'cod_alumno' => 'required|string|max:255',
-            'name' => 'required|string|max:255',
-            'documento' => 'required|string|max:20',
-            'email' => 'required|email|max:255|unique:estudiantes,email,' . $id,
-            'telefonos' => 'nullable|string|max:20',
-            'programa_academico' => 'nullable|string|max:255',
-        ]);
-
-        $estudiante = Estudiante::findOrFail($id);
-        $estudiante->update($validatedData);
-
-        // Retornar con mensaje de éxito
-        return back()->with('success', 'Estudiante actualizado correctamente.');
     }
 }

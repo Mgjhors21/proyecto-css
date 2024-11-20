@@ -11,8 +11,6 @@ return new class extends Migration
         Schema::create('ticket_curso', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ticket_id');
-            $table->unsignedBigInteger('curso_seminario_id')->nullable();
-            $table->unsignedBigInteger('curso_extension_id')->nullable();
             $table->string('curso_nombre')->nullable();
             $table->integer('curso_horas')->nullable();
             $table->date('curso_fecha')->nullable();

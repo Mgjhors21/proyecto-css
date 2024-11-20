@@ -31,19 +31,8 @@ class TicketCurso extends Model
         return $this->belongsTo(Ticket::class);
     }
 
-
-    public function cursoExtension()
-    {
-        return $this->belongsTo(CursoExtension::class, 'curso_extension_id');
-    }
-
-    public function cursoSeminario()
-    {
-        return $this->belongsTo(CursoSeminario::class, 'curso_seminario_id');
-    }
     public function curso()
     {
         return $this->belongsTo(Curso::class);
     }
-
 }

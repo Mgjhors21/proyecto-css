@@ -7,13 +7,14 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/carta.js') }}"></script>
 
-    <div class="card">
+    <div class="content-inner">
+        <h1 class="page-title">Carta de Respuesta</h1>
 
         <div class="card-container">
             <div class="card-header">
                 <img src="{{ asset('images/logos autonoma_1.png') }}" alt="Logo" class="logo">
                 <div style="text-align: right;">
-                    <p><strong>RC-{{ $ticket->numero_radicado_salida }} </strong></p>
+                    <p><strong>RC-{{$ticket->numero_radicado_salida}} </strong></p>
                     <h4>Popayán, {{ now()->format('d M. Y') }}</h4>
                 </div>
             </div>
@@ -44,7 +45,7 @@
                 </p>
             </div>
             <div class="tittle">
-                <h4>1 ) Validación 96 Horas Seminario de Actualización:</h4>
+                <h4>1) Validación 96 Horas Seminario de Actualización:</h4>
             </div>
             <table class="validation-table">
                 <thead>
@@ -105,16 +106,16 @@
                 <p style="text-align: justify;">
                     En cualquier caso, la decanatura está a su disposición para orientar o aclarar cualquier duda adicional
                     que
-                    le pueda surgir.Universitariamente
+                    le pueda surgir.
                 </p>
-                <div class="firma-container">
-                    @if (session('firmaPath'))
-                        <img src="{{ asset('storage/' . session('firmaPath')) }}" alt="Firma Decano" class="firma">
-                    @else
-                        <hr style="border: 10px solid #333333; margin: 0px 0; width: 50%; margin-left: 0;">
-                    @endif
-                    <p class="decano-text">Decano Facultad de Ingeniería y Ciencias Naturales</p>
-                </div>
+
+                <p>
+                    Universitariamente,<br><br>
+                    <br><br>
+                    <br><br>
+                    <hr style="border: 1px solid #333333; margin: 20px 0; width: 50%; margin-left: 0;">
+                    Decano Facultad de Ingeniería y Ciencias Naturales
+                </p>
             </div>
             <!-- Pie de página -->
             <div class="footer" style="font-size: 9px; line-height: 1.2;">
@@ -125,18 +126,13 @@
                 <p>www.uniautonoma.edu.co - Email: recepción@uniautonoma.edu.co</p>
             </div>
         </div>
-        <div>
-            <form id="cartaForm" action="{{ route('carta') }}" method="POST">
-                @csrf
-                <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
-                <button type="submit" class="btn-enviar">Enviar</button>
-            </form>
-        </div>
-        <div>
-            <a href="{{ route('subir.firma') }}" class="btn btn-secondary mt-3">
-                <i class="fas fa-pen"></i> Subir Firma Digital
-            </a>
-        </div>
+
+        <form id="cartaForm" action="{{ route('carta') }}" method="POST">
+            @csrf
+            <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+            <button type="submit" class="btn-enviar">Enviar</button>
+        </form>
+
 
     </div>
 

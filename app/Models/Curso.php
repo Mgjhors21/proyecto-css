@@ -18,15 +18,15 @@ class Curso extends Model
         'archivo',
         'estado',
         'categoria',
+        'horas_cursos',
     ];
-
     public function horas()
     {
         return $this->hasMany(CursoHora::class);
     }
 
     public function estudiante()
-{
-    return $this->belongsTo(Estudiante::class, 'estudiante_id');
-}
+    {
+        return $this->belongsTo(Estudiante::class, 'estudiante_id');
+    }
 }

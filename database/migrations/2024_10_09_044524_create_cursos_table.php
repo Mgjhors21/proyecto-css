@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('archivo')->nullable();
             $table->enum('estado', ['Aceptado', 'Rechazado']);
             $table->enum('categoria', ['curso_seminarios', 'curso_extension']); // Campo adicional para diferenciar
+            $table->integer('horas_cursos')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -24,7 +24,7 @@ class Ticket extends Model
         'revisor_id',
         'comentario_revisor',
         'numero_radicado',
-        'numero_radicado_salida' // Agregar este campo
+        'numero_radicado_salida'
     ];
 
     // Relación principal para los cursos del ticket

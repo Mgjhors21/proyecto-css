@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id'); // El usuario que crea el ticket (estudiante)
             $table->enum('estado_ticket', ['pendiente', 'aprobado', 'rechazado'])->default('pendiente');
-            $table->enum('tipo_curso', ['extension', 'seminario']); // Tipo de curso
+            $table->enum('tipo_curso', ['curso_seminarios', 'curso_extension']); // Tipo de curso
             $table->string('numero_radicado')->nullable();
             $table->string('numero_radicado_salida')->nullable();
             $table->timestamps();

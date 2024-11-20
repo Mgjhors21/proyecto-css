@@ -9,7 +9,6 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\TicketController;
-use App\Http\Controllers\VicerrectoraController;
 use App\Http\Controllers\SecretariaController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\FacultadController;
@@ -90,6 +89,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/curso/crear/{categoria}', [CursoController::class, 'crear'])->name('curso.crear');
         Route::post('/curso/guardar', [CursoController::class, 'guardar'])->name('curso.guardar');
         Route::delete('/curso/eliminar/{id}', [CursoController::class, 'eliminar'])->name('curso.eliminar');
+        Route::post('/solicitud/users/cursos/horas', [CursoController::class, 'guardarHoras'])->name('cursos.horas.guardar');
+        Route::delete('users/cursos/horas/{id}', [CursoController::class, 'eliminarHoras'])->name('cursos.horas.eliminar');
+        Route::get('/horas-cursos', [CursoController::class, 'mostrarHoras'])->name('horas.cursos');
 
         // Rutas para tickets
         Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
@@ -99,13 +101,9 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/solicitudes/{id}', [TicketController::class, 'eliminar'])->name('solicitud.eliminar');
         Route::get('/solicitudes', [TicketController::class, 'solicitudes'])->name('solicitudes');
         Route::get('/solicitudes', [TicketController::class, 'solicitudes'])->name('solicitudes.carta');
-        Route::get('/view-carta', [TicketController::class, 'viewCarta'])->name('viewcarta');
+        Route::get('/view-carta', [TicketController::class, 'viewCarta'])->name('viewCarta');
         Route::get('/tickets/{id}/detalles', [TicketController::class, 'detallesCurso'])->name('tickets.show');
         Route::put('/radicado-salida/{id}', [TicketController::class, 'updateRadicadoSalida'])->name('updateRadicadoSalida');
-
-        // Rutas Vicerectoría
-        Route::get('/vicerrectora/lista-radicado', [VicerrectoraController::class, 'listaRadicado'])->name('vicerrectora.listaRadicado');
-        Route::post('/vicerrectora/updateRadicado/{ticketId}', [VicerrectoraController::class, 'updateRadicado'])->name('vicerrectora.updateRadicado');
     });
     // Rutas para usuarios
     Route::prefix('usuarios')->group(function () {
@@ -129,8 +127,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/usuarios/crear-institucion', [EstudianteController::class, 'storeInstitucion'])->name('institucion.store');
     Route::get('/institucion/{id}/edit', [EstudianteController::class, 'editInstitucion'])->name('institucion.edit');
     Route::delete('/institucion/{id}', [EstudianteController::class, 'destroyInstitucion'])->name('institucion.destroy');
-    Route::put('/estudiantes/{id}/actualizar', [EstudianteController::class, 'actualizar'])->name('estudiante.actualizar');
-
 
 
 
@@ -140,12 +136,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/certificado', [MailController::class, 'enviarEmail'])->name('viewCarta');
     Route::post('/email', [MailController::class, 'enviarcarta'])->name('carta');
     Route::post('/emamilrechazo', [MailController::class, 'enviarcartaRechazo'])->name('cartarechazo');
-    Route::post('/subir-firma', [MailController::class, 'subirFirma'])->name('subir.firma');
-
-    Route::get('/subir-firma', function () {
-        return view('secretaria.cartas.Subir_firma');
-    })->name('subir.firma');
-
 });
 
 

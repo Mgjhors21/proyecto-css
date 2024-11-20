@@ -9,7 +9,7 @@ class CursoHora extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['curso_id', 'horas', 'año'];
+    protected $fillable = ['categoria', 'horas_minimas', 'año'];
 
     public function curso()
     {

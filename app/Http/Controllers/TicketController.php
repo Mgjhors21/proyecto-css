@@ -1,11 +1,10 @@
 <?php
 
-
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\TicketCurso;
-use App\Models\Curso;  // Este es el modelo que utilizarás ahora
+use App\Models\Curso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +14,6 @@ use App\Mail\TicketCreated;
 
 class TicketController extends Controller
 {
-    // Principal, No se Elimina
     public function crearTicket(Request $request)
     {
         try {
@@ -33,60 +31,81 @@ class TicketController extends Controller
                 return redirect()->back()->with('error', 'Usuario no tiene un estudiante asociado');
             }
 
-            // Calcular las horas ya registradas en tickets anteriores de este usuario específico
-            $horasTickets = DB::table('ticket_curso')
-                ->join('tickets', 'ticket_curso.ticket_id', '=', 'tickets.id')
-                ->where('tickets.user_id', $user->estudiante->id)
-                ->sum('ticket_curso.curso_horas');
+            // Obtener los cursos aceptados del estudiante
+            $cursos = Curso::where('estudiante_id', $user->estudiante->id)
+                ->where('estado', 'Aceptado')
+                ->get();
 
-            // Validar si ya existen 40 horas en tickets anteriores de este usuario
-            if ($horasTickets >= 40) {
-                return redirect()->back()->with('error', 'No se puede crear otro ticket. Ya tienes 40 horas de cursos registradas.');
+            if ($cursos->isEmpty()) {
+                return redirect()->back()->with('error', 'No hay cursos aceptados para crear un ticket');
             }
 
-            // Obtener los cursos actuales del estudiante
-            $cursos = Curso::where('estudiante_id', $user->estudiante->id)->get();
+            // Determinar el tipo de curso basado en la categoría
+            $categoria = strtolower(trim($cursos->first()->categoria));
+            $tipoCurso = match ($categoria) {
+                'curso_seminarios' => 'curso_seminarios',
+                'curso_extension' => 'curso_extension',
+                default => null,
+            };
 
-            // Determinar el tipo de curso basado en los cursos (asumiendo todos son del mismo tipo)
-            $tipoCurso = $cursos->first() ? strtolower($cursos->first()->tipo) : null;
-            if (!in_array($tipoCurso, ['extension', 'seminario'])) {
-                return redirect()->back()->with('error', 'Tipo de curso no válido');
+            // Validar que el tipo de curso sea válido
+            if (!$tipoCurso) {
+                return redirect()->back()->with('error', 'Tipo de curso no válido para crear un ticket');
             }
 
-            // Crear el ticket con estado_ticket en "pendiente"
+            // Calcular horas totales
+            $horasTotales = $cursos->sum('horas_cursos');
+
+            // Consultar las horas mínimas requeridas
+            $horasMinimas = DB::table('curso_horas')
+                ->where('categoria', $tipoCurso)
+                ->value('horas_minimas');
+
+            if (!$horasMinimas) {
+                return redirect()->back()->with('error', 'No se encontraron horas mínimas configuradas para este tipo de curso');
+            }
+
+            // Validar si las horas totales cumplen con las mínimas
+            if ($horasTotales < $horasMinimas) {
+                return redirect()->back()->with('error', 'Las horas totales de los cursos son menores a las mínimas requeridas (' . $horasMinimas . ' horas).');
+            }
+
+            // Generar número de radicado único
+            $numeroRadicado = $this->generarNumeroRadicadoUnico();
+
+            // Crear el ticket
             $ticket = Ticket::create([
                 'user_id' => $user->estudiante->id,
                 'estado_ticket' => 'pendiente',
                 'tipo_curso' => $tipoCurso,
-                'numero_radicado_salida' => $request->input('numero_radicado_salida'),
+                'numero_radicado' => $numeroRadicado,
             ]);
 
-            // Almacenar los cursos en la tabla ticket_curso
+            // Almacenar los cursos en ticket_curso
             foreach ($cursos as $curso) {
                 $archivoCursoPath = $this->clonarArchivo($curso->archivo, 'curso', $curso->id);
 
                 TicketCurso::create([
                     'ticket_id' => $ticket->id,
                     'curso_nombre' => $curso->tipo,
-                    'curso_horas' => $curso->horas()->sum('horas'), // Asumiendo relación con CursoHora
+                    'curso_horas' => $curso->horas_cursos,
                     'curso_fecha' => $curso->created_at,
                     'estado_curso' => 'pendiente',
-                    // Asignar a curso_seminario_id o curso_extension_id según el tipo
-                    ($tipoCurso === 'seminario' ? 'curso_seminario_id' : 'curso_extension_id') => $curso->id,
-                    // Asignar el archivo al campo correcto
-                    ($tipoCurso === 'seminario' ? 'archivo_seminario' : 'archivo_extension') => $archivoCursoPath,
-                    'codigo_estudiante' => $user->estudiante->codigo // Asumiendo que existe este campo
+                    'curso_seminario_id' => $tipoCurso === 'curso_seminarios' ? $curso->id : null,
+                    'curso_extension_id' => $tipoCurso === 'curso_extension' ? $curso->id : null,
+                    'archivo_seminario' => $tipoCurso === 'curso_seminarios' ? $archivoCursoPath : null,
+                    'archivo_extension' => $tipoCurso === 'curso_extension' ? $archivoCursoPath : null,
+                    'codigo_estudiante' => $user->estudiante->cod_alumno,
                 ]);
             }
 
             DB::commit();
 
             // Enviar correo de confirmación
-            $userEmail = $user->email;
             $data = [
                 'asunto' => 'Horas de Curso',
                 'descripcion' => 'Cordial saludo. Me dirijo a usted para solicitar la validación de las horas de curso. Adjunto archivo PDF. Agradezco su atención y quedo atento a sus comentarios.',
-                'remitente' => $userEmail,
+                'remitente' => $user->email,
             ];
 
             Mail::to('cecd.soporte@gmail.com')->send(new TicketCreated($data));
@@ -98,6 +117,27 @@ class TicketController extends Controller
             return redirect()->back()->with('error', 'Error al crear el ticket: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Genera un número de radicado único.
+     *
+     * @return string
+     */
+    private function generarNumeroRadicadoUnico()
+    {
+        do {
+            // Generar un número aleatorio de 6 dígitos
+            $numeroRadicado = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+
+            // Verificar que no exista en las tablas `tickets` y `historial`
+            $existeEnTickets = Ticket::where('numero_radicado', $numeroRadicado)->exists();
+            $existeEnHistorial = DB::table('historial')->where('numero_radicado', $numeroRadicado)->exists();
+        } while ($existeEnTickets || $existeEnHistorial);
+
+        return $numeroRadicado;
+    }
+
+
 
     /**
      * Clona el archivo del curso si existe

@@ -7,13 +7,9 @@ use PhpOffice\PhpWord\PhpWord;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Mail\Notification;
-use Illuminate\Support\Facades\File;
-use App\Models\Estudiante;
-use App\Models\Solicitud;
-use App\Models\Ticket; // Asegúrate de importar el modelo correcto
+use App\Models\Ticket;
 use App\Models\Historial;
 use Illuminate\Support\Facades\Log;
-
 
 class MailController extends Controller
 {
@@ -405,60 +401,13 @@ class MailController extends Controller
         // Obtener el ticket según el ID pasado en el formulario
         $ticket = Ticket::findOrFail($request->ticket_id);
 
-        // Recuperar la firma desde la sesión
-        $firmaPath = session('firmaPath', null);
-
-
         // Verificar el estado y redirigir a la carta correspondiente
         if ($ticket->estado_ticket === 'aprobado') {
-            return view('secretaria.cartas.aprobada', compact('ticket', 'firmaPath'));
+            return view('secretaria.cartas.aprobada', compact('ticket'));
         } elseif ($ticket->estado_ticket === 'rechazado') {
-            return view('secretaria.cartas.rechazada', compact('ticket', 'firmaPath'));
+            return view('secretaria.cartas.rechazada', compact('ticket'));
         } else {
             return redirect()->back()->with('error', 'Estado de la solicitud no válido');
-        }
-    }
-
-    public function subirFirma(Request $request)
-    {
-        Log::info('Iniciando proceso de carga de firma.');
-
-        try {
-            // Validar que el archivo sea una imagen permitida (JPEG o PNG)
-            $request->validate([
-                'firma' => 'required|image|mimes:jpeg,png|max:2048',
-            ]);
-            Log::info('Validación completada.');
-        } catch (\Exception $e) {
-            Log::error('Error en la validación:', ['mensaje' => $e->getMessage()]);
-            return redirect()->back()->with('error', 'El archivo no cumple con los requisitos. Asegúrate de subir una imagen válida.');
-        }
-
-        if ($request->hasFile('firma')) {
-            $file = $request->file('firma');
-
-            // Loguear información del archivo recibido
-            Log::info('Archivo recibido:', [
-                'nombre' => $file->getClientOriginalName(),
-                'tamaño' => $file->getSize(),
-                'mime' => $file->getMimeType(),
-            ]);
-
-            // Subir la imagen y asegurar extensión correcta
-            $extension = $file->getClientOriginalExtension(); // Obtener extensión del archivo
-            $fileName = uniqid() . '.' . $extension; // Generar un nombre único
-            $path = $file->storeAs('firmas', $fileName, 'public'); // Guardar el archivo con su extensión correcta
-
-            // Loguear información del archivo almacenado
-            Log::info('Archivo almacenado en:', ['path' => $path]);
-
-            // Guardar la ruta en la sesión
-            session(['firmaPath' => $path]);
-
-            return redirect()->back()->with('success', 'Firma digital cargada correctamente.');
-        } else {
-            Log::error('No se recibió ningún archivo en la solicitud.');
-            return redirect()->back()->with('error', 'No se pudo cargar la firma. Por favor, intenta nuevamente.');
         }
     }
 }
