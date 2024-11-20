@@ -1,0 +1,243 @@
+/* Estilos generales */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Estilos para badges de estado */
+.estado-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.estado-pendiente {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.estado-aprobado {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.estado-rechazado {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.estado-en-proceso {
+    background-color: #e0f2fe;
+    color: #075985;
+}
+
+/* Estilos para las cards de cursos */
+.curso-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.curso-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Estilos para los botones de acción */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.action-buttons button {
+    transition: all 0.2s ease;
+}
+
+.action-buttons button:hover {
+    transform: translateY(-1px);
+}
+
+/* Estilos para el encabezado del ticket */
+.ticket-header {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.ticket-info {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.ticket-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .ticket-info {
+        gap: 1rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .action-buttons button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .curso-card {
+        padding: 1rem;
+    }
+}
+
+/* Mejoras visuales adicionales */
+.text-muted {
+    color: #6c757d !important;
+}
+
+.shadow-sm {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Animaciones para los botones */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Estilos para los iconos */
+.fas {
+    margin-right: 0.25rem;
+}
+
+/* Nuevos estilos para la sección de archivos */
+.archivos-section {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 1rem;
+}
+
+.archivo-card {
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.archivo-card:hover {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.archivo-card .btn-group {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.archivo-card:hover .btn-group {
+    opacity: 1;
+}
+
+.archivo-card .btn {
+    padding: 0.25rem 0.5rem;
+}
+
+.archivo-card .btn i {
+    margin: 0;
+}
+
+.archivo-card .badge {
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+}
+
+/* Estilos para los botones de archivo */
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
+.btn-outline-success:hover {
+    background-color: #198754;
+    border-color: #198754;
+    color: white;
+}
+
+/* Mejoras responsive para la sección de archivos */
+@media (max-width: 768px) {
+    .archivo-card {
+        margin-bottom: 1rem;
+    }
+
+    .archivo-card .btn-group {
+        opacity: 1;
+    }
+}
+
+/* Animación para los botones de archivo */
+.btn-group .btn {
+    transform: scale(1);
+    transition: transform 0.2s ease;
+}
+
+.btn-group .btn:hover {
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+/* Estado hover para las cards de archivo */
+.archivo-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.archivo-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.archivo-card:hover::after {
+    opacity: 1;
+}

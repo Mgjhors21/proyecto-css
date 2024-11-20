@@ -1,0 +1,84 @@
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ffffff 0%, #3d3fb3 100%);
+    padding: 20px;
+}
+
+.register-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 900px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #4e73df;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.logo-form-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    background-color: #ffffff;
+    padding: 2rem;
+}
+
+.logo-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.form-container {
+    width: 60%;
+    padding: 2rem;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-control {
+    border-radius: 20px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: none;
+    box-shadow: 0 0 10px rgb(124, 132, 138);
+}
+
+.btn-primary {
+    border-radius: 20px;
+    padding: 10px 20px;
+}
+
+@media (max-width: 768px) {
+    .logo-form-container {
+        flex-direction: column;
+    }
+
+    .logo-container, .form-container {
+        width: 100%;
+    }
+}

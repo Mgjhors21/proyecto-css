@@ -1,0 +1,32 @@
+services:
+  CDCE:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      DATABASE_HOST: 127.0.0.1
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: CDCE_app
+
+  admin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - 80:80
+    depends_on:
+      - CDCE 
+
+  app:
+    image: php:8.1-fpm
+    container_name: app
+    volumes:
+      - ./path/to/your/app:/var/www/html
+    environment:
+      - ...
+    working_dir: /var/www/html
+    command: bash -c "apt-get update && apt-get install -y libzip-dev zip && docker-php-ext-install zip && php-fpm"

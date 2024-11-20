@@ -1,0 +1,210 @@
+/* Estilos generales */
+.content-inner {
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+/* Estilos para la tabla */
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.tickets-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.tickets-table th,
+.tickets-table td {
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+}
+
+.tickets-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+/* Estilos para los inputs y botones */
+.form-control {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.numero-radicado {
+    width: 150px;
+}
+
+.numero-radicado.saved {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    transition: all 0.3s ease;
+}
+
+.btn {
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.btn-outline-primary {
+    color: #007bff;
+    border: 1px solid #007bff;
+    background-color: transparent;
+}
+
+.btn-outline-primary:hover {
+    color: #fff;
+    background-color: #007bff;
+}
+
+.btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* Estilos para las notificaciones */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem;
+    border-radius: 4px;
+    color: #fff;
+    max-width: 300px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification.success {
+    background-color: #28a745;
+}
+
+.notification.error {
+    background-color: #dc3545;
+}
+
+/* Estilos para estados vacíos */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+}
+
+.empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Estilos para las estadísticas */
+.ticket-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    flex: 1;
+}
+
+.stat-title {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Estilos específicos para el botón */
+.btnGuardarRadicado {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btnGuardarRadicado:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.btnGuardarRadicado:active {
+    transform: translateY(1px);
+}
+
+/* Asegurarse que la tabla y sus celdas tienen el z-index correcto */
+.tickets-table {
+    position: relative;
+    z-index: 1;
+}
+
+.tickets-table td {
+    position: relative;
+    z-index: 2;
+}
+
+/* Estilo para el input */
+.numero-radicado {
+    padding: 6px 12px;
+    border: 2px solid #ced4da;
+    border-radius: 4px;
+    margin-right: 8px;
+    width: 150px;
+}
+
+.numero-radicado:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Añadir un efecto de hover a la fila para mejor UX */
+.tickets-table tbody tr:hover {
+    background-color: #f8f9fa;
+}

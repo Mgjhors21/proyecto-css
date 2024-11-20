@@ -1,0 +1,35 @@
+/* Estilos para la vista de introducción */
+.card{
+    max-width: 100%;
+    margin: auto;
+}
+
+.card-header{
+    font-size: 2.5rem;
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-align: center; /* Centra el título */
+}
+
+.intro-text {
+    font-size: 1.2rem;
+    color: #555;
+    line-height: 1.6;
+    text-align: justify;
+    margin: 0 auto;
+    max-width: 800px; /* Limita el ancho para una mejor legibilidad */
+    text-align: center; /* Centra el texto para mejorar la presentación */
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .title h1 {
+        font-size: 2rem;
+    }
+
+    .intro-text {
+        font-size: 1rem;
+        text-align: left; /* En pantallas pequeñas, alineamos el texto a la izquierda */
+    }
+}

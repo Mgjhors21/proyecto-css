@@ -1,0 +1,77 @@
+/* resources/css/app.css */
+
+/* Estilos generales para el contenedor */
+.body {
+    margin-top: 20px; /* Margen superior */
+    padding: 20px; /* Relleno interno */
+    background-color: #f8f9fa; /* Color de fondo */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+/* Estilo para los encabezados */
+h2 {
+    color: #343a40; /* Color del texto */
+    font-size: 24px; /* Tamaño de fuente */
+    margin-bottom: 20px; /* Margen inferior */
+}
+
+/* Estilos para las alertas */
+.alert {
+    margin-bottom: 20px; /* Margen inferior */
+    padding: 15px; /* Relleno interno */
+    border-radius: 4px; /* Bordes redondeados */
+}
+
+/* Estilos para la tabla */
+.table {
+    width: 100%; /* Ancho completo */
+    border-collapse: collapse; /* Colapsar bordes */
+}
+
+/* Encabezado de la tabla */
+.table thead th {
+    background-color: #007bff; /* Color de fondo */
+    color: white; /* Color del texto */
+    padding: 10px; /* Relleno */
+}
+
+/* Celdas de la tabla */
+.table tbody td {
+    padding: 10px; /* Relleno */
+    border: 1px solid #dee2e6; /* Bordes */
+}
+
+/* Estilo para las filas alternas */
+.table tbody tr:nth-child(even) {
+    background-color: #f2f2f2; /* Color de fondo alterno */
+}
+
+/* Estilo para las filas al pasar el mouse */
+.table tbody tr:hover {
+    background-color: #e9ecef; /* Color de fondo al pasar el mouse */
+}
+
+
+/* Estilo de botones de acción */
+.btn-warning {
+    background-color: #3d3fb3;
+    color: #fff;
+    border-color: #3d3fb3;
+    width: 100%;
+}
+
+.btn-warning:hover {
+    background-color: #ffffff;
+    border-color: #3d3fb3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #ffffff;
+    color: black;
+}

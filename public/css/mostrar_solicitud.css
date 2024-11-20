@@ -1,0 +1,124 @@
+/* mostrar_solicitud.css */
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+}
+
+.solicitud-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.solicitud-title {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+}
+
+.solicitud-card, .documento-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.solicitud-card {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.solicitud-info, .solicitud-detalles {
+    flex-basis: 48%;
+}
+
+h2 {
+    color: #3498db;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+p {
+    margin-bottom: 15px;
+}
+
+strong {
+    color: #2c3e50;
+}
+
+.documento-card {
+    text-align: center;
+    margin-bottom: 40px; /* Aumentado el margen inferior */
+}
+
+.documento-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.documento-icon {
+    width: 80px;
+    height: auto;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.documento-icon:hover {
+    transform: scale(1.1);
+}
+
+.btn-descargar, .btn-regresar {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #3498db;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-descargar:hover, .btn-regresar:hover {
+    background-color: #2980b9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-regresar {
+    background-color: #e74c3c;
+}
+
+.btn-regresar:hover {
+    background-color: #c0392b;
+}
+
+.botones-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px; /* Espacio adicional arriba del botón Regresar */
+}
+
+@media (max-width: 768px) {
+    .solicitud-info, .solicitud-detalles {
+        flex-basis: 100%;
+    }
+    
+    .btn-descargar, .btn-regresar {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

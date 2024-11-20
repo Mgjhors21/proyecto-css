@@ -1,0 +1,49 @@
+
+
+.card {
+    border-radius: 1.5rem;
+    overflow: hidden;
+
+}
+
+.card-header {
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
+    background-color: #3d3fb3;
+    color: #fff;
+    text-align: left;
+
+}
+
+
+.table {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.table thead th {
+    border-bottom: none;
+    font-size: 1.1rem;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+}
+
+.logo{
+    display: flex;
+    justify-content: flex-end; /* Centra el contenido horizontalmente */
+    align-items: center;     /* Centra el contenido verticalmente */
+    margin-left: 50px;
+    top: 10px;
+
+}
+.bi  {
+    vertical-align: bottom;
+    text-align: right;
+    top: 10px;
+}
