@@ -1,12 +1,10 @@
 /* Estilos para la vista de introducción */
-.card{
-    max-width: 100%;
-    margin: auto;
-}
+
 
 .card-header{
     font-size: 2.5rem;
-    color: #333;
+    background-color:#3d3fb3 ;
+    color: #ffff;
     font-weight: 700;
     margin-bottom: 1rem;
     text-align: center; /* Centra el título */

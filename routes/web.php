@@ -82,6 +82,7 @@ Route::middleware(['auth'])->group(function () {
         // Rutas de Programa
         Route::get('facultades/{facultad}/programas/create', [ProgramaController::class, 'create'])->name('programas.create');
         Route::post('facultades/{facultad}/programas', [ProgramaController::class, 'store'])->name('programas.store');
+        Route::delete('/programas/{id}', [ProgramaController::class, 'destroy'])->name('programas.destroy');
 
         // Rutas para Curso
         Route::get('/solicitud/curso/registrar/{categoria}', [CursoController::class, 'mostrarFormulario'])->name('curso.registrar');
@@ -127,7 +128,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/usuarios/crear-institucion', [EstudianteController::class, 'storeInstitucion'])->name('institucion.store');
     Route::get('/institucion/{id}/edit', [EstudianteController::class, 'editInstitucion'])->name('institucion.edit');
     Route::delete('/institucion/{id}', [EstudianteController::class, 'destroyInstitucion'])->name('institucion.destroy');
-
+    Route::put('/estudiantes/{id}/actualizar', [EstudianteController::class, 'actualizar'])->name('estudiante.actualizar');
 
 
 
@@ -136,6 +137,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/certificado', [MailController::class, 'enviarEmail'])->name('viewCarta');
     Route::post('/email', [MailController::class, 'enviarcarta'])->name('carta');
     Route::post('/emamilrechazo', [MailController::class, 'enviarcartaRechazo'])->name('cartarechazo');
+    Route::post('/subir-firma', [MailController::class, 'subirFirma'])->name('subir.firma');
+    Route::get('/subir-firma', function () {
+        return view('secretaria.cartas.Subir_firma');
+    })->name('subir.firma');
 });
 
 

@@ -5,6 +5,7 @@
 @section('contenido')
     <link rel="stylesheet" href="{{ asset('css/form_principal.css') }}">
     <script src="{{ asset('js/formulario_principal.js') }}"></script> <!-- Archivo externo de JS -->
+
     <div class="card">
         <h5 class="card-title">Formulario de registro</h5>
 
@@ -62,19 +63,27 @@
             </div>
 
             <div class="row">
-                <div class="form-group">
-                    <label for="Facultad">Facultad:</label>
-                    <select id="Facultad" name="Facultad" class="form-control" required>
-                        <option value="">Seleccione una facultad</option>
-                        @foreach ($facultad as $facultades)
-                            <option value="{{ $facultades->id }}">{{ $facultades->nombre_facultad }}</option>
-                        @endforeach
-                    </select>
+                <div class="col-12 col-md-6">
+                    <div class="form-group">
+                        <label for="Facultad">Facultad:</label>
+                        <select id="Facultad" name="Facultad" class="form-control" required>
+                            <option value="">Seleccione una facultad</option>
+                            @foreach ($facultad as $facultades)
+                                <option value="{{ $facultades->id }}">{{ $facultades->nombre_facultad }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="programa_academico">Programa Académico:</label>
                     <select id="programa_academico" name="programa_academico" class="form-control" required>
                         <option value="">Seleccione un programa</option>
+                        @foreach ($facultad as $facultades)
+                            @foreach ($facultades->programas as $programa)
+                                <!-- Suponiendo que tienes relación -->
+                                <option value="{{ $programa->id }}">{{ $programa->nombre_programa }}</option>
+                            @endforeach
+                        @endforeach
                     </select>
                 </div>
             </div>
@@ -131,9 +140,7 @@
                                         <td>
                                             @if ($curso['archivo'])
                                                 <a href="{{ asset('storage/' . $curso['archivo']) }}" target="_blank"
-                                                    class="btn btn-sm btn-primary">
-                                                    Ver archivo
-                                                </a>
+                                                    class="btn btn-sm btn-primary">Ver archivo</a>
                                             @else
                                                 <span class="text-muted">Sin archivo</span>
                                             @endif
@@ -143,10 +150,8 @@
                                                 class="d-inline delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-danger btn-sm d-flex align-items-center gap-1">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                    <span>Eliminar</span>
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-trash-alt"></i> Eliminar
                                                 </button>
                                             </form>
                                         </td>
@@ -159,9 +164,24 @@
                             class="form-ticket mr-2">
                             @csrf
                             <button type="submit" class="btn btn-primary">Crear Ticket</button>
+
+                            @if (session('ticket_creado'))
+                                <div id="ticket-creado" data-message="El ticket se ha creado con éxito."></div>
+                            @endif
+
+                            @if (session('horas_error'))
+                                <div id="horas-error"
+                                    data-horas-totales-seminarios="{{ session('horas_error')['horas_totales_seminarios'] }}"
+                                    data-horas-totales-extension="{{ session('horas_error')['horas_totales_extension'] }}"
+                                    data-horas-minimas-seminarios="{{ session('horas_error')['horas_minimas_seminarios'] }}"
+                                    data-horas-minimas-extension="{{ session('horas_error')['horas_minimas_extension'] }}"
+                                    style="display: none;">
+                                </div>
+                            @endif
                         </form>
                     </div>
                 @endif
             </div>
         </div>
-    @endsection
+    </div>
+@endsection

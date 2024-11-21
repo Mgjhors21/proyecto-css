@@ -8,6 +8,14 @@ use App\Models\Programa;
 
 class FacultadController extends Controller
 {
+    public function show($id)
+    {
+        $facultad = Facultad::findOrFail($id);
+        $programas = $facultad->programas;  // Esto debería devolver todos los programas asociados a la facultad.
+        return view('users.facultades.show', compact('facultad', 'programas'));
+    }
+
+
 
     public function create()
     {
@@ -28,7 +36,7 @@ class FacultadController extends Controller
         // Crear la facultad sin el campo 'id'
         Facultad::create($data);
 
-        return redirect()->route('facultades.index')->with('success', 'Facultad creada exitosamente');
+        return redirect()->route('users.facultades.index')->with('success', 'Facultad creada exitosamente');
     }
 
     // FacultadController.php
@@ -40,14 +48,9 @@ class FacultadController extends Controller
         ]);
     }
 
-    public function show($id)
-    {
-        $facultad = Facultad::findOrFail($id);
-        $programas = $facultad->programas;  // Esto debería devolver todos los programas asociados a la facultad.
-        return view('users.facultades.show', compact('facultad', 'programas'));
-    }
 
-    public function index()
+
+    public function Index()
     {
         $facultades = Facultad::all();
         return view('users.facultades.index', compact('facultades'));

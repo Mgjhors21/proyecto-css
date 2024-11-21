@@ -53,25 +53,39 @@ class TicketController extends Controller
                 return redirect()->back()->with('error', 'Tipo de curso no válido para crear un ticket');
             }
 
-            // Calcular horas totales
-            $horasTotales = $cursos->sum('horas_cursos');
+            // Calcular las horas totales para seminarios y extensión por separado
+            $horasSeminarios = $cursos->where('categoria', 'curso_seminarios')->sum('horas_cursos');
+            $horasExtension = $cursos->where('categoria', 'curso_extension')->sum('horas_cursos');
 
-            // Consultar las horas mínimas requeridas
-            $horasMinimas = DB::table('curso_horas')
-                ->where('categoria', $tipoCurso)
+            // Consultar las horas mínimas requeridas para ambos tipos de curso
+            $horasMinimasSeminarios = DB::table('curso_horas')
+                ->where('categoria', 'curso_seminarios')
                 ->value('horas_minimas');
 
-            if (!$horasMinimas) {
-                return redirect()->back()->with('error', 'No se encontraron horas mínimas configuradas para este tipo de curso');
+            $horasMinimasExtension = DB::table('curso_horas')
+                ->where('categoria', 'curso_extension')
+                ->value('horas_minimas');
+
+            if (!$horasMinimasSeminarios || !$horasMinimasExtension) {
+                return redirect()->back()->with('error', 'No se encontraron horas mínimas configuradas para alguno de los tipos de curso');
             }
 
-            // Validar si las horas totales cumplen con las mínimas
-            if ($horasTotales < $horasMinimas) {
-                return redirect()->back()->with('error', 'Las horas totales de los cursos son menores a las mínimas requeridas (' . $horasMinimas . ' horas).');
+            // Validación estricta de creación de tickets
+            if (
+                ($horasSeminarios < $horasMinimasSeminarios && $horasSeminarios > 0) ||  // Seminarios no cumple
+                ($horasExtension < $horasMinimasExtension && $horasExtension > 0) || // Extensión no cumple
+                ($horasSeminarios < $horasMinimasSeminarios && $horasExtension < $horasMinimasExtension) // Ninguno cumple
+            ) {
+                return redirect()->back()->with('horas_error', [
+                    'horas_totales_seminarios' => $horasSeminarios,
+                    'horas_totales_extension' => $horasExtension,
+                    'horas_minimas_seminarios' => $horasMinimasSeminarios,
+                    'horas_minimas_extension' => $horasMinimasExtension
+                ]);
             }
 
             // Generar número de radicado único
-            $numeroRadicado = $this->generarNumeroRadicadoUnico();
+            $numeroRadicado = $this->generarNumeroRadicadoUnico($tipoCurso);
 
             // Crear el ticket
             $ticket = Ticket::create([
@@ -110,7 +124,8 @@ class TicketController extends Controller
 
             Mail::to('cecd.soporte@gmail.com')->send(new TicketCreated($data));
 
-            return redirect()->back()->with('success', 'Ticket creado exitosamente');
+            // Devolver mensaje de éxito al frontend con 'ticket_creado'
+            return redirect()->back()->with('ticket_creado', true);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error al crear ticket: ' . $e->getMessage());
@@ -118,23 +133,45 @@ class TicketController extends Controller
         }
     }
 
+
+
+
     /**
      * Genera un número de radicado único.
-     *
-     * @return string
+     *   @param string $tipoCurso
+     *   @return string
      */
-    private function generarNumeroRadicadoUnico()
+    private function generarNumeroRadicadoUnico($tipoCurso)
     {
-        do {
-            // Generar un número aleatorio de 6 dígitos
-            $numeroRadicado = str_pad(random_int(1, 999999), 6, '0', STR_PAD_LEFT);
+        // Obtener el año actual
+        $anioActual = date('Y');
 
-            // Verificar que no exista en las tablas `tickets` y `historial`
-            $existeEnTickets = Ticket::where('numero_radicado', $numeroRadicado)->exists();
-            $existeEnHistorial = DB::table('historial')->where('numero_radicado', $numeroRadicado)->exists();
-        } while ($existeEnTickets || $existeEnHistorial);
+        // Determinar el prefijo basado en el tipo de curso
+        $prefijo = match ($tipoCurso) {
+            'curso_seminarios' => "{$anioActual}-seminario-",
+            'curso_extension' => "{$anioActual}-extension-",
+            default => "{$anioActual}-OTR-", // Prefijo genérico para otros tipos
+        };
 
-        return $numeroRadicado;
+        // Consultar el último número con ese prefijo
+        $ultimoRadicado = DB::table('tickets')
+            ->where('numero_radicado', 'like', "{$prefijo}%")
+            ->orderBy('numero_radicado', 'desc')
+            ->value('numero_radicado');
+
+        // Determinar el siguiente número secuencial
+        if ($ultimoRadicado) {
+            // Extraer el número después del prefijo
+            $numeroSecuencial = (int)substr($ultimoRadicado, strlen($prefijo)) + 1;
+        } else {
+            $numeroSecuencial = 1; // Iniciar en 1 si no hay radicados
+        }
+
+        // Formatear el número con ceros a la izquierda (por ejemplo, 0001)
+        $numeroFormateado = str_pad($numeroSecuencial, 4, '0', STR_PAD_LEFT);
+
+        // Concatenar el prefijo y el número secuencial
+        return "{$prefijo}{$numeroFormateado}";
     }
 
 
@@ -206,14 +243,14 @@ class TicketController extends Controller
     // Principal, No se Elimina
     public function index()
     {
-        // Obtener todos los tickets, agrupados por estudiante
-        $solicitudesPorEstudiante = Ticket::with('ticketCursos') // Cambiado de 'curso' a 'ticketCursos'
+        // Obtener solo los tickets del usuario autenticado
+        $solicitudesPorEstudiante = Ticket::with('ticketCursos')
+            ->where('user_id', Auth::id()) // Filtrar por el ID del usuario actual
             ->get()
             ->groupBy(function ($ticket) {
-                return $ticket->user_id; // Agrupa por el ID del usuario (estudiante)
+                return $ticket->user_id;
             });
 
-        // Cambiamos la ruta de la vista a la correcta
         return view('solicitud.index', compact('solicitudesPorEstudiante'));
     }
 

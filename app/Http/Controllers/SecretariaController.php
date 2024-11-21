@@ -68,17 +68,39 @@ class SecretariaController extends Controller
 
     public function aprobarSolicitud($ticketId)
     {
+        $ticket = Ticket::with('ticketCursos')->findOrFail($ticketId);
+
         $this->actualizarEstado(request(), $ticketId, 'aprobado');
-        return redirect()->back()
-            ->with('success', "La solicitud ha sido aprobada exitosamente.");
+
+        // Verificar que todos los cursos estén aprobados
+        $pendientes = $ticket->ticketCursos()->where('estado_curso', 'pendiente')->count();
+        if ($pendientes > 0) {
+            return redirect()->back()->with('error', 'No puedes aprobar el ticket hasta que todos los cursos estén aprobados.');
+        }
+
+        $ticket->estado_ticket = 'aprobado';
+        $ticket->save();
+
+        return redirect()->back()->with('success', "El ticket ha sido aprobado exitosamente.");
     }
 
     public function rechazarSolicitud($ticketId)
     {
+        $ticket = Ticket::with('ticketCursos')->findOrFail($ticketId);
 
         $this->actualizarEstado(request(), $ticketId, 'rechazado');
-        return redirect()->back()
-            ->with('error', "La solicitud ha sido rechazada.");
+
+
+        // Verificar que todos los cursos estén rechazados
+        $noRechazados = $ticket->ticketCursos()->where('estado_curso', '!=', 'rechazado')->count();
+        if ($noRechazados > 0) {
+            return redirect()->back()->with('error', 'No puedes rechazar el ticket hasta que todos los cursos estén rechazados.');
+        }
+
+        $ticket->estado_ticket = 'rechazado';
+        $ticket->save();
+
+        return redirect()->back()->with('error', "El ticket ha sido rechazado.");
     }
 
     public function rechazarCurso(Request $request, $id, $tipoCurso)
@@ -90,28 +112,34 @@ class SecretariaController extends Controller
             return redirect()->back()->with('error', 'Curso no encontrado.');
         }
 
-        // Establecer el estado del curso como 'rechazado'
-        $ticketCurso->estado_curso = 'rechazado';
-
-        // Guardar la razón del rechazo en curso_descripcion
-        if ($request->has('curso_descripcion')) {
-            $ticketCurso->curso_descripcion = $request->input('curso_descripcion');
-        } else {
+        // Validar que se proporcione una descripción del rechazo
+        if (!$request->has('curso_descripcion') || empty($request->input('curso_descripcion'))) {
             return redirect()->back()->with('error', 'La descripción del rechazo es requerida.');
         }
 
-        // Guardar los cambios en la base de datos
+        // Establecer el estado del curso como 'rechazado' y guardar la razón en curso_descripcion
+        $ticketCurso->estado_curso = 'rechazado';
+        $ticketCurso->curso_descripcion = $request->input('curso_descripcion');
         $ticketCurso->save();
 
-        // Obtener el Ticket relacionado
+        // Verificar si todos los cursos del ticket están en estado final (aprobado/rechazado)
         $ticket = $ticketCurso->ticket;
 
         if ($ticket) {
-            // Obtener el ID del estudiante relacionado con este ticket
-            $estudianteId = $ticket->user_id;
+            $cursosPendientes = $ticket->ticketCursos()->where('estado_curso', 'pendiente')->count();
+
+            // Si no hay cursos pendientes, evaluar el estado final del ticket
+            if ($cursosPendientes === 0) {
+                $todosRechazados = $ticket->ticketCursos()->where('estado_curso', '!=', 'rechazado')->count() === 0;
+
+                if ($todosRechazados) {
+                    $ticket->estado_ticket = 'rechazado';
+                    $ticket->save();
+                }
+            }
 
             // Redirigir a la ruta con el ID del estudiante
-            return redirect()->route('solicitud.detalles', ['id' => $estudianteId])
+            return redirect()->route('solicitud.detalles', ['id' => $ticket->user_id])
                 ->with('success', 'Curso rechazado exitosamente.');
         } else {
             return redirect()->back()->with('error', 'Ticket no encontrado.');
@@ -125,17 +153,6 @@ class SecretariaController extends Controller
             $ticketCurso = TicketCurso::findOrFail($id);
             $ticketCurso->estado_curso = 'aceptado';
             $ticketCurso->save();
-
-            // Verificar si todos los cursos del ticket están aprobados
-            $ticket = $ticketCurso->ticket;
-            $todosAprobados = $ticket->ticketCursos()
-                ->where('estado_curso', '!=', 'aceptado')
-                ->count() === 0;
-
-            if ($todosAprobados) {
-                $ticket->estado_vicerrectoria = 'aprobado';
-                $ticket->save();
-            }
 
             return redirect()->back()->with('success', 'Curso aprobado exitosamente.');
         } catch (\Exception $e) {
@@ -172,9 +189,23 @@ class SecretariaController extends Controller
         return view('secretaria.detalles_solicitud', compact('estudiante', 'solicitudes'));
     }
 
-    public function Historial()
+    public function Historial(Request $request)
     {
-        $historial = Historial::all();
+
+        $query = Historial::query(); // Modelo asociado a los datos de historial
+
+        // Obtener el parámetro de búsqueda
+        $search = $request->input('search');
+
+        if ($search) {
+            $query->where('nombre', 'like', '%' . $search . '%')
+                ->orWhere('cod_alumno', 'like', '%' . $search . '%')
+                ->orWhere('numero_radicado', 'like', '%' . $search . '%')
+                ->orWhere('numero_radicado_salida', 'like', '%' . $search . '%');
+        }
+
+        // Obtener los datos filtrados
+        $historial = $query->get();
         return view('secretaria.historial', compact('historial'));
     }
 }

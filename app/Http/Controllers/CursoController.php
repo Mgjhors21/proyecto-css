@@ -55,7 +55,7 @@ class CursoController extends Controller
         $horasCurso = CursoHora::findOrFail($id);  // Buscar la hora del curso por ID
         $horasCurso->delete();  // Eliminar la configuración
 
-        return redirect()->route('users.cursos.horas_cursos')->with('success', 'Horas del curso eliminadas correctamente.');
+        return redirect()->back()->with('success', 'Horas del curso eliminadas correctamente.');
     }
 
 

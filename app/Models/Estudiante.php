@@ -32,14 +32,6 @@ class Estudiante extends Model
 
     // Relación con RegistroActividad
 
-    public function cursoSeminarios()
-    {
-        return $this->hasMany(CursoSeminario::class);
-    }
-    public function cursoExtencion()
-    {
-        return $this->hasMany(CursoSeminario::class);
-    }
 
     public function solicitudes()
     {

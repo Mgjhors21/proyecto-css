@@ -3,12 +3,20 @@
 @section('contenido')
 
     <link rel="stylesheet" href="{{ asset('css/create_programa.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/Programas.js') }}"></script>
 
     <div class="card">
         <div class="card-header">
             <h1>Crear Programa para Facultad: {{ $facultad->nombre_facultad }}</h1>
         </div>
-        <!-- Mostrar alertas de errores -->
+
+        <!-- Contenedor para mensajes -->
+        <div id="session-messages" data-success="{{ session('success') }}" data-error="{{ session('error') }}"
+            data-errors="{{ $errors->any() ? json_encode($errors->all()) : '' }}">
+        </div>
+
+        <!-- Mostrar alertas de errores (Fallback para no-JS) -->
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <strong>Error:</strong> Existen algunos problemas con los datos ingresados.
@@ -77,43 +85,13 @@
                 @enderror
             </div>
 
-            <button type="submit" class="btn btn-primary">Crear</button>
+            <div>
+                <button type="submit" class="btn btn-primary">Crear</button>
+                <a href="{{ route('facultades.index') }}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
         </form>
     </div>
+    </div>
 
-    <!-- Validación en tiempo real y retroalimentación -->
-    <script>
-        // Función para mostrar el mensaje de validación en tiempo real
-        function showHelpMessage(id, message) {
-            const helpText = document.getElementById(id);
-            helpText.style.color = 'red';
-            helpText.innerText = message;
-        }
-
-        // Función para restablecer el mensaje de validación
-        function resetHelpMessage(id) {
-            const helpText = document.getElementById(id);
-            helpText.style.color = 'gray';
-            helpText.innerText = helpText.getAttribute('data-default');
-        }
-
-        // Escuchar cada campo para validar
-        document.getElementById('codigo_programa').addEventListener('input', function() {
-            const codigoPrograma = this.value;
-            if (!/^[a-zA-Z0-9]+$/.test(codigoPrograma)) {
-                showHelpMessage('codigo_programa_help', 'El código debe ser alfanumérico y sin espacios.');
-            } else {
-                resetHelpMessage('codigo_programa_help');
-            }
-        });
-
-        document.getElementById('anio_pensum').addEventListener('input', function() {
-            const anioPensum = this.value;
-            if (!/^\d{4}$/.test(anioPensum)) {
-                showHelpMessage('anio_pensum_help', 'El año debe tener 4 dígitos (por ejemplo, 2020).');
-            } else {
-                resetHelpMessage('anio_pensum_help');
-            }
-        });
-    </script>
 @endsection

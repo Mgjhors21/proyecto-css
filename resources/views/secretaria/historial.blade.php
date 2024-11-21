@@ -6,11 +6,27 @@
 @section('contenido')
 
     <link rel="stylesheet" href="{{ asset('css/historial.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 
     <div class="card">
         <div class="card-header">
-        <h1>Historial de Cartas Enviadas</h1>
-    </div>
+            <h1>Historial de Cartas Enviadas</h1>
+        </div>
+
+        <form action="{{ route('historial') }}" method="GET" class="mb-3">
+            <div class="input-group">
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control"
+                    placeholder="Buscar por nombre, código o fecha de radicado"
+                    value="{{ request('search') }}">
+                <button class="btn" type="submit">
+                    <i class="fas fa-search"></i> <!-- Ícono de lupa -->
+                </button>
+            </div>
+        </form>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -29,14 +45,13 @@
                     <tr>
                         <td>{{ $registro->nombre }}</td>
                         <td>{{ $registro->cod_alumno }}</td>
-                        <td>{{ $registro->programa_academico}}</td>
-                        <td>{{ $registro->numero_radicado}}</td>
+                        <td>{{ $registro->programa_academico }}</td>
+                        <td>{{ $registro->numero_radicado }}</td>
                         <td>{{ $registro->numero_radicado_salida }}</td>
                         <td>{{ $registro->cursos }}</td>
                         <td>{{ ucfirst($registro->estado) }}</td>
                         <td>
-                            {{-- Verifica si la fecha es null antes de formatearla --}}
-                            {{ $registro->fecha_envio ? $registro->fecha_envio->format('d-m-Y H:i:s') : 'Fecha no disponible' }}
+                            {{ $registro->fecha_revision ? $registro->fecha_revision->format('d-m-Y H:i:s') : 'Fecha no disponible' }}
                         </td>
                     </tr>
                 @endforeach

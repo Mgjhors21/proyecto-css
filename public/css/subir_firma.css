@@ -1,0 +1,86 @@
+/* General Styles */
+
+
+/* Card Container */
+.card {
+    max-width: 1000px;
+
+    margin: 50px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Form Container */
+.subir-container {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading Style */
+.subir-container h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+/* Form Label */
+.subir-container .form-label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+/* Input Field */
+.subir-container .form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 14px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* Input Hover/Focus */
+.subir-container .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+}
+
+/* Submit Button */
+.subir-container .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
+    margin-top: 10px;
+}
+
+/* Button Hover */
+.subir-container .btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 576px) {
+    .card {
+        margin: 20px;
+    }
+
+    .subir-container h2 {
+        font-size: 1.2rem;
+    }
+
+    .subir-container .btn-primary {
+        font-size: 13px;
+    }
+}

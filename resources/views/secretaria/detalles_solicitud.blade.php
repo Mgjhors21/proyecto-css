@@ -45,21 +45,27 @@
                             </span>
                         </div>
                         <div>
-                            @if ($solicitud->estado_ticket === 'pendiente')
-                                <form action="{{ route('ticket.aprobar', ['ticketId' => $solicitud->id]) }}" method="POST"
-                                    class="d-inline">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success btn-sm btn-aprobar">
-                                        <i class="fas fa-check"></i> Aceptar
-                                    </button>
-                                </form>
-                                <form action="{{ route('solicitud.rechazar', ['ticketId' => $solicitud->id]) }}"
-                                    method="POST" class="d-inline">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger btn-sm btn-rechazar">
-                                        <i class="fas fa-times"></i> Rechazar
-                                    </button>
-                                </form>
+                            <!-- Botones para aprobar/rechazar el ticket -->
+                            @if ($solicitud->ticketCursos->where('estado_curso', 'pendiente')->isEmpty())
+                                @if ($solicitud->estado_ticket === 'pendiente')
+                                    <form action="{{ route('ticket.aprobar', ['ticketId' => $solicitud->id]) }}"
+                                        method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-sm btn-aprobar">
+                                            <i class="fas fa-check"></i> Aprobar Ticket
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('solicitud.rechazar', ['ticketId' => $solicitud->id]) }}"
+                                        method="POST" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm btn-rechazar">
+                                            <i class="fas fa-times"></i> Rechazar Ticket
+                                        </button>
+                                    </form>
+                                @endif
+                            @else
+                                <p class="text-muted">Debes procesar todos los cursos antes de aprobar o rechazar el ticket.
+                                </p>
                             @endif
                         </div>
                     </div>
@@ -131,17 +137,13 @@
                                     </div>
 
                                     <div class="action-buttons mt-3">
-                                        @if ($solicitud->estado_ticket === 'aprobado' && $curso->estado_curso === 'pendiente')
-                                            <form action="{{ route('curso.aprobar', ['id' => $curso->id]) }}"
-                                                method="POST" class="d-inline">
-                                                @csrf
-                                                <button type="button" class="btn btn-success btn-sm btn-aprobar-curso"
-                                                    data-curso-id="{{ $curso->id }}">
-                                                    <i class="fas fa-check"></i> Aprobar Curso
-                                                </button>
-                                            </form>
-                                        @endif
-                                        @if ($solicitud->estado_ticket === 'rechazado')
+                                        @if ($curso->estado_curso === 'pendiente')
+                                        <form action="{{ route('curso.aprobar', ['id' => $curso->id]) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success btn-sm btn-aprobar-curso">
+                                                <i class="fas fa-check"></i> Aprobar Curso
+                                            </button>
+                                        </form>
                                             <form
                                                 action="{{ route('curso.rechazar', ['id' => $curso->id, 'tipoCurso' => 'extension']) }}"
                                                 method="POST" id="form-rechazar-{{ $curso->id }}" class="d-inline">

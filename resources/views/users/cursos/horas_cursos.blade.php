@@ -4,22 +4,11 @@
 
 @section('contenido')
     <link rel="stylesheet" href="{{ asset('css/form_principal.css') }}">
-    <script src="{{ asset('js/formulario_principal.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/horas.js') }}"></script>
 
     <div class="card">
         <h5 class="card-title">Configurar Horas y Año de Cursos</h5>
-
-        <!-- Mostrar mensajes de éxito o error -->
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @elseif (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <form method="POST" action="{{ route('cursos.horas.guardar') }}" class="main-form">
             @csrf
             <div class="row">
@@ -73,9 +62,6 @@
             <h2>Horas Configuradas</h2>
 
             @if ($horasCategorias->isEmpty())
-                <div class="alert alert-info">
-                    No hay horas configuradas para los cursos.
-                </div>
             @else
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -83,7 +69,6 @@
                             <tr>
                                 <th>Categoría</th>
                                 <th>Horas Mínimas</th>
-                                <!-- Cambié "Horas" por "Horas Mínimas" para que coincida con la migración -->
                                 <th>Año</th>
                                 <th>Acciones</th>
                             </tr>
@@ -92,7 +77,7 @@
                             @foreach ($horasCategorias as $horasCurso)
                                 <tr>
                                     <td>{{ $horasCurso->categoria }}</td>
-                                    <td>{{ $horasCurso->horas_minimas }}</td> <!-- Asegúrate de mostrar 'horas_minimas' -->
+                                    <td>{{ $horasCurso->horas_minimas }}</td>
                                     <td>{{ $horasCurso->año }}</td>
                                     <td>
                                         <form action="{{ route('cursos.horas.eliminar', $horasCurso->id) }}" method="POST"
@@ -114,4 +99,37 @@
             @endif
         </div>
     </div>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                title: 'Éxito!',
+                text: '{{ session('success') }}',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                title: 'Error!',
+                text: '{{ session('error') }}',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        </script>
+    @endif
+
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                title: 'Formulario Incorrecto!',
+                text: 'Por favor, corrige los errores en el formulario.',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            });
+        </script>
+    @endif
 @endsection

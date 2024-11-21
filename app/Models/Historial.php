@@ -27,7 +27,10 @@ class Historial extends Model
         'total_horas',
         'estado',
     ];
-
+    // Cast automático para campos de fecha
+    protected $casts = [
+        'fecha_revision' => 'datetime',
+    ];
     // Aquí puedes definir las relaciones si necesitas (por ejemplo, relación con Ticket)
     public function ticket()
     {

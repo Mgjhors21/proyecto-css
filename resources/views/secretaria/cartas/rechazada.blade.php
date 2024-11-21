@@ -80,17 +80,17 @@
                 <p style="text-align: justify;">
                     En cualquier caso, la decanatura está a su disposición para orientar o aclarar cualquier duda adicional
                     que
-                    le pueda surgir.
+                    le pueda surgir Universitariamente
                 </p>
 
-                <p>
-                    Universitariamente,<br><br>
-                    <br><br>
-                    <br><br>
-                    <!-- Ajusta el estilo según sea necesario -->
-                    <hr style="border: 1px solid #333333; margin: 20px 0; width: 50%; margin-left: 0;">
-                    Decano Facultad de Ingeniería y Ciencias Naturales
-                </p>
+                <div class="firma-container">
+                    @if (session('firmaPath'))
+                        <img src="{{ asset('storage/' . session('firmaPath')) }}" alt="Firma Decano" class="firma">
+                    @else
+                        <hr style="border: 10px solid #333333; margin: 0px 0; width: 50%; margin-left: 0;">
+                    @endif
+                    <p class="decano-text">Decano Facultad de Ingeniería y Ciencias Naturales</p>
+                </div>
             </div>
 
             <!-- Pie de página -->
@@ -108,6 +108,11 @@
             <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
             <button type="submit" class="btn-enviar">Enviar</button>
         </form>
+        <div>
+            <a href="{{ route('subir.firma') }}" class="btn btn-secondary mt-3">
+                <i class="fas fa-pen"></i> Subir Firma Digital
+            </a>
+        </div>
 
 
         </div>

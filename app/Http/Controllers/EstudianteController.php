@@ -12,6 +12,8 @@ use Maatwebsite\Excel\Validators\ValidationException;
 use App\Models\Programa;
 use App\Models\Institucion;
 use App\Models\Facultad;
+use Illuminate\Support\Facades\Validator;
+
 
 
 class EstudianteController extends Controller
@@ -118,6 +120,8 @@ class EstudianteController extends Controller
     // Guardar los datos del estudiante
     public function guardarEstudiante(Request $request, $id)
     {
+
+
         // Validación de todos los campos del formulario
         $request->validate([
             'nombre' => 'nullable|string|max:255',
@@ -140,7 +144,12 @@ class EstudianteController extends Controller
             $estudiante->last_name = $request->last_name;
             $estudiante->documento = $request->cedula;
             $estudiante->telefonos = $request->celular;
-            $estudiante->programa_academico = $request->programa_academico;
+            // Aquí, obtenemos el nombre del programa usando el ID
+            $programa = Programa::find($request->programa_academico);
+            
+
+            $estudiante->programa_academico = $programa ? $programa->nombre_programa : null;
+
             $estudiante->email = $request->correo;
             $estudiante->cod_alumno = $request->codigo_estudiante;
 
@@ -188,5 +197,23 @@ class EstudianteController extends Controller
 
         // Redirigir con un mensaje de éxito
         return redirect()->route('institucion.create')->with('success', 'Institución eliminada con éxito.');
+    }
+
+    public function actualizar(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'cod_alumno' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'documento' => 'required|string|max:20',
+            'email' => 'required|email|max:255|unique:estudiantes,email,' . $id,
+            'telefonos' => 'nullable|string|max:20',
+            'programa_academico' => 'nullable|string|max:255',
+        ]);
+
+        $estudiante = Estudiante::findOrFail($id);
+        $estudiante->update($validatedData);
+
+        // Retornar con mensaje de éxito
+        return back()->with('success', 'Estudiante actualizado correctamente.');
     }
 }
