@@ -46,7 +46,7 @@
                     <div class="mb-3">
                         <label for="phone" class="form-label">Teléfono</label>
                         <input type="tel" class="form-control" id="phone" name="phone" value="{{ old('phone') }}"
-                            minlength="9" maxlength="10" required pattern="\d{9,10}"
+                            minlength="9" maxlength="10" required pattern="\d{10}"
                             title="El teléfono debe contener entre 9 y 10 dígitos">
                         @error('phone')
                             <div class="text-danger">{{ $message }}</div>

@@ -101,7 +101,7 @@
                                             <td>
                                                 <input type="text" name="documento"
                                                     value="{{ old('documento', $estudiante->documento) }}"
-                                                    class="form-control @error('documento') is-invalid @enderror" required>
+                                                    class="form-control @error('documento') is-invalid @enderror" maxlength="10"   required>
                                                 @error('documento')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror
@@ -117,7 +117,7 @@
                                             <td>
                                                 <input type="text" name="telefonos"
                                                     value="{{ old('telefonos', $estudiante->telefonos) }}"
-                                                    class="form-control @error('telefonos') is-invalid @enderror">
+                                                    class="form-control @error('telefonos') is-invalid @enderror" maxlength="10">
                                                 @error('telefonos')
                                                     <div class="invalid-feedback">{{ $message }}</div>
                                                 @enderror

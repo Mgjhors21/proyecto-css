@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('apellido')->nullable(); // Cambia a `estudiante_apellido` si es necesario
             $table->string('cod_alumno');
             $table->string('programa_academico');
-            $table->integer('numero_radicado');
+            $table->string('numero_radicado');
             $table->date('fecha_revision');
             $table->text('cursos'); // JSON o serialización de cursos
             $table->integer('total_horas');
@@ -33,8 +33,11 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('historial');
+        Schema::table('historial', function (Blueprint $table) {
+            // Revertir el cambio a INTEGER si es necesario
+            $table->integer('numero_radicado')->change();
+        });
     }
 };
