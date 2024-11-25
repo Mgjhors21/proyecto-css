@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LoginController;
@@ -13,6 +14,10 @@ use App\Http\Controllers\SecretariaController;
 use App\Http\Controllers\ProgramaController;
 use App\Http\Controllers\FacultadController;
 use App\Http\Controllers\CursoController;
+
+
+use App\Http\Controllers\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}', [UsuariosController::class, 'destroy'])->name('usuarios.destroy'); // Eliminar usuario
         Route::get('/check-email', [UsuariosController::class, 'checkEmail'])->name('usuarios.checkEmail');
     });
+
 
 
     // Rutas de bienvenida y certificados
@@ -147,7 +153,7 @@ Route::middleware(['auth'])->group(function () {
 // Rutas de recuperación de contraseña
 // Elimina o comenta las siguientes líneas, ya que Auth::routes() maneja esto
 // Route::get('password/email', [ForgotPasswordController::class, 'showLinkRequestFormDos'])->name('password.request');
-// Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 
 
 

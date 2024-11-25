@@ -9,12 +9,6 @@
 </head>
 
 <body>
-    <p>-------- Forwarded message --------</p>
-    <p>De: MAGDALI CERTUCHE &lt;recepcion@uniautonoma.edu.co&gt;</p>
-    <p>Date: mar, 4 de jun. de 2024 7:16 a. m.</p>
-    <p>Subject: Re: Horas De Seminario y Horas de Extension</p>
-    <p>To: JUAN DAVID HORMAZA MIRANDA &lt;juan.hormaza.m@uniautonoma.edu.co&gt;</p>
-
     <p>Buenos días,</p>
     <p>La solicitud ha sido radicada con el consecutivo nO 0940 del 04-05-2024 y será remitida la facultad para su
         trámite.</p>

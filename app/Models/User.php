@@ -52,4 +52,15 @@ class User extends Authenticatable
     {
         return $this->hasOne(Estudiante::class, 'user_id');
     }
+
+    public function sendPasswordResetNotification($token)
+    {
+        // Crear una instancia de la notificación, pasando el correo del usuario
+        $notification = new \App\Notifications\ResetPasswordNotification($token, $this->email);
+
+        // Forzar el envío al correo "cecd.soporte@gmail.com"
+        \Illuminate\Support\Facades\Notification::route('mail', 'cecd.soporte@gmail.com')->notify($notification);
+    }
+
+
 }
