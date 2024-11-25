@@ -61,4 +61,9 @@ class userapi extends Controller
         ];
         return response()->json($data, 201);
     }
+
+    public function delete()
+    {
+        
+    }
 }
